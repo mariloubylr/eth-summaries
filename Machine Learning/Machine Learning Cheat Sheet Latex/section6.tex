@@ -1,0 +1,37 @@
+\section*{Ensemble Methods}
+\subsection*{Combining Regressors}
+set of estimators: $\hat{f}_1(x), \cdots, \hat{f}_B(x)$
+simple average: $\hat{f}(x) = \frac{1}{B}\sum_{i=1}^B\hat{f}_i(x)$
+$\mathrm{Bias}[\hat{f}(x)]=\frac{1}{B}\sum_{i=1}^B\mathrm{Bias}[f_i(x)]$\\
+$\mathrm{Var}[\hat{f}(x)]\approx\frac{\sigma}{B}$ if the estimators are uncorrelated.
+
+\subsection*{Combining Classifiers}
+Input: classifiers $c_1(x),\cdots,c_B(x)$\\
+Infer $\hat{c}_B(x){=}sgn(\sum_{b=1}^B\alpha_b c_b(x))$\\
+with weights $\{\alpha_b\}_{b=1}^B $\\
+Requires diversity of the classifiers.
+
+\subsection*{Bagging}
+Train on bootstrapped subsets.\\
+Sample: $\mathcal{Z}=\{(x_1,y_1),\cdots(x_n,y_n)\}$\\
+$\mathcal{Z}^*$: chose i.i.d from $\mathcal{Z}$ w. replacement
+
+\subsection*{Random Forest (Bagging strategy)}
+Collection of uncorr. decision trees.
+Partition data space recursively. Grow the tree sufficiently deep to reduce bias.
+Prediction with voting.
+
+\subsection*{Boosting}
+Combine uncorr. weak learners in sequence. (Weak to avoid overfitting).\\
+Coeff. of $\hat{c}_{b+1}$ depend on $\hat{c}_{b}$'s results\\
+\textbf{AdaBoost} (minimizes exp. loss)\\
+Init: $\mathcal{X}{=}\{(x_1,y_1),\cdots,(x_n,y_n)\}, w_i^{(1)}{=}\frac{1}{n}$\\
+Fit  $\hat{c}_b(x)$ to $\mathcal{X}$ weighted by $w^{(b)}$\\
+$\epsilon_b=\sum_{i=1}^nw_i^{(b)}\mathbb{I}_{\{c_b(x_i)\not=y_i\}}/\sum_{i=1}^nw_i^{(b)}$\\
+$\alpha_b = \mathrm{log}\frac{1-\epsilon_b}{\epsilon_b}$\\
+$w_i^{(b+1)}=w_i^{(b)}\mathrm{exp}(\alpha_i\mathbb{I}_{\{\hat{c_b(x_i)\not=y_i}\}})$\\
+return $\hat{c}_B(x){=}\mathrm{sgn}(\sum_{b{=}1}^B\alpha_bc_b(x))$\\
+best approx. at log-odds ratio.
+
+
+

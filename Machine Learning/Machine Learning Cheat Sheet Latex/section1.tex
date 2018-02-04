@@ -1,0 +1,74 @@
+\section*{Probabilities}
+\subsection*{Expectation}
+$\mathbbm{E}[X]=\int_{\Omega}xf(x)dx=\int_{\omega}xP[X{=}x]dx$
+$\mathbb{E}_{Y|X}[Y]=\mathbb{E}_{Y}[Y|X]$\\
+$\mathbb{E}_{X,Y}[f(X,Y)]=\mathbb{E}_{X}\mathbb{E}_{Y|X}[f(X,Y)|X]$\\
+$\mathbb{E}_{Y|X}[f(X,Y)|X]{=}\int_\mathbb{R}f(X,y)p_{Y|X}(y)dy$
+
+\subsection*{Variance \& Covariance}
+$Var(X){=}\mathbb{E}[(X{-}\mathbb{E}[X])^2]{=}\mathbb{E}[X^2]{-}\mathbb{E}[X]^2$\\
+$\mathrm{Var}[X+Y]{=}\mathrm{Var}[X]+\mathrm{Var}[Y]\quad XY iid$\\
+$\mathrm{Var}[\alpha X]=\alpha^2\mathrm{Var}[X]$
+
+$Cov(X,Y)=\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]$
+\subsection*{Conditional Probabilities}
+$P[X|Y]=\frac{P[X,Y]}{P[Y]}$, 
+$P[\bar{X}|Y]=1-P[X|Y]$
+\subsection*{Distributions}
+$\mathcal{N}(x|\mu, \sigma^2)=1/(\sqrt{2\pi\sigma^2})\mathrm{exp}^{-(x-\mu)^2/(2\sigma^2)}$\\
+$\mathcal{N}(x|\mu, \Sigma)= \frac{1}{(2\pi)^{2D/}|\mathbf{\Sigma}|^{1/2}} e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^T\mathbf{\Sigma}^{-1}(\mathbf{x}-\mathbf{\mu})}$\\
+$\mathrm{Exp}(x|\lambda){=}\lambda e^{-\lambda x}$ $\mathrm{Ber}(x|\theta){=}\theta^x (1{-}\theta)^{(1-x)}$
+Sigmoid: $\sigma(x)=1/(1+\mathrm{exp(-x)}))$
+
+\subsection*{Chebyshev \& Consistency}
+$P(|X-\mathbb{E}[X]|\geq \epsilon)\leq \frac{Var(X)}{\epsilon^2}$\\
+$\lim{n\rightarrow\infty} P(|\hat{\mu}-\mu |>\epsilon)=0$
+
+\subsection*{Cramer Rao lower bound}
+$\mathrm{Var}[\hat{\theta}]\geq \mathcal{I}_n(\theta)$\\
+$\mathcal{I}_n(\theta) = -\mathbb{E}[\frac{\vartheta^2 \mathrm{log}[\mathcal{X}_n|\theta]}{\vartheta \theta^2}] \quad \hat{\theta}$ unbiased\\
+Efficiency of $\hat{\theta}$: $e(\theta_n)=\frac{1}{\mathrm{Var}[\hat{\theta}_n]\mathcal{I_n(\theta)}}$\\
+$e(\theta_n) = 1$ (efficient)\\
+$lim_{n\rightarrow\infty}e(\theta_n) = 1$ (asymp. efficient)
+
+\subsection*{Matrix Derivations}
+$\frac{\vartheta \mathbf{a}^T\mathbf{x}}{\vartheta\mathbf{x}}{=}\mathbf{a} \quad \frac{\vartheta \mathbf{a}^T\mathbf{Xb}}{\vartheta\mathbf{X}}{=}\mathbf{ab}^T \quad \frac{\vartheta \mathbf{a}^T\mathbf{X}^T\mathbf{b}}{\vartheta\mathbf{X}}{=}\mathbf{ba}^T $\\
+$\frac{\vartheta \mathbf{a}^T\mathbf{Xa}}{\vartheta\mathbf{X}}{=}\mathbf{a}^T(\mathbf{X}+\mathbf{X}^T)$\\
+ $\frac{\vartheta}{\vartheta\mathbf{x}} \mathbf{f(x)}^T\mathbf{g(x)}{=}\mathbf{f(x)}^T\frac{\vartheta \mathbf{g(x)}}{\vartheta\mathbf{x}}+\mathbf{g(x)}^T\frac{\vartheta\mathbf{f(x)}}{\vartheta\mathbf{x}}$\\
+$\mathbf{X}^T\mathbf{X}$: only invertible if none of the Eigenvalue is $0$.
+Inversion instable if ratio from $\mathbf{X}$'s smallest EV to the largest is big.
+
+\section*{Optimization}
+\subsection*{Gradient Descent}
+$\theta^{\mathrm{new}}\leftarrow\theta^{\mathrm{old}}-\eta\nabla_{\theta}\mathcal{L}$\\
+Convergence isn't guaranteed.\\
+Less zigzag by adding momentum: \\$\theta^{(l+1)}\leftarrow\theta^{(l)}-\eta\nabla_{\theta}\mathcal{L}+\mu(\theta^{l}-\theta^{(l-1)})$
+
+\subsection*{Newton's Method}
+Use 2nd order derivation. (Hessian)
+$\theta^{\mathrm{new}}\leftarrow\theta^{\mathrm{old}}-\eta(\nabla_{\theta}\mathcal{L}/\nabla^2_{\theta}\mathcal{L})$\\
+$H=\nabla^2_{\theta}\mathcal{L}$ has to be p.d (convex func).
+
+\section*{Risks and Losses}
+\subsection*{Expected Risk}
+Conditional Expected Risk\\
+$R(f, X) = \int_{\mathbbm{R}} \mathcal{L}(Y,f(X))P(Y|X)dY$\\
+Total Expected Risk
+$R(f) =$\\
+$= \mathbbm{E}_{X}[R(f,X)] =\int_{\mathcal{X}}R(f,X)P(X)dX =
+\int_{\mathcal{X}}\int_{\mathbbm{R}} \mathcal{L}(Y,f(X))P(X,Y)dXdY$
+
+
+\subsection*{Empirical Risk}
+$Z^{train}={(X_1,Y_1),...,(X_n,Y_n)}$ \\
+$Z^{test}={(X_{n+1},Y_{n+1}),...,(X_{n+m},Y_{n+m})}$\\
+Empirical Risk Minimizer $\hat{f}$ s.t.\\
+$\hat{f} \in \argmin_{f \in \mathcal{C}} \hat{R}(\hat{f}, Z^{train})$\\
+Training error:\\
+$\hat{R}(\hat{f}, Z^{train}) = \frac{1}{n} \sum_{i=1}^n Q(Y_i, \hat{f}(X_i))$\\
+Test error:\\
+$\hat{R}(\hat{f}, Z^{test}) = \frac{1}{m} \sum_{i=n+1}^{n+m} Q(Y_i, \hat{f}(X_i))$\\
+$\hat{R}(\hat{f}, Z^{test}) \neq \mathbbm{E}_{X}[R(f,X)]$
+
+
+

@@ -1,0 +1,26 @@
+\section*{Parametric Density Estimation}
+Find the most likely parameter of a distribution.
+
+\subsection*{Maximum Likelihood}
+Likelihood: $P(\mathcal{X}|\theta)=\prod_{i\leq n}p(x_i|\theta)$\\
+Find: $\hat{\theta}\in \argmax_\theta P(\mathcal{X}|\theta)$\\
+Procedure: solve $\nabla_\theta log P(\mathcal{X}|\theta)=0$\\
+Efficient \& easy to calculate.\\
+Consistent. Converge to best model $\theta_0$
+Warning: Overfitting!
+
+\subsection*{Maximum A Posteriori}
+Assume Knowledge of a prior $P(\theta)$\\
+Find: $\hat{\theta}\in \argmax_\theta P(\theta|\mathcal{X}) =$\\
+$=\argmax_\theta P(\mathcal{X}|\theta)P(\theta)$\\
+Solve $\nabla_\theta log P(\mathcal{X}|\theta)P(\theta)=0$
+
+\subsection{Bayesian Learning}
+Prior Knowledge of $p(\theta)$\\
+Find Posterior Density: $p(\theta|\mathcal{X})$\\
+Can be done using Baye's Rules\\
+We can use this Recursively:\\
+$\mathcal{X}^n=\{x_1, \cdots, x_n\}$\\
+$p(\theta|\mathcal{X}^n)=\frac{p(x_n|\theta)p(\theta|\mathcal{X}^{n-1})}{\int p(x_n|\theta)p(\theta|\mathcal{X}^{n-1} d\theta}$ with\\
+$p(\theta|\mathcal{X}^0)p(\theta)$\\
+Difficult \& needs prior knowledge. But better against overfitting.

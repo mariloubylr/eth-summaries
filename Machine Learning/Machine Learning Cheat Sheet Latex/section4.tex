@@ -1,0 +1,29 @@
+\section*{Numerical Est. Techinques}
+\textbf{Setting}: Estimate$\hat{f}(x) \in \mathcal{F}$ with minimal prediction error.
+
+\subsection*{K-Fold Cross Validation}
+Initialisation (split training set):\\
+$\mathcal{Z}=\mathcal{Z}_1\bigcup\mathcal{Z}_2\bigcup\cdots\bigcup\mathcal{Z}_K, \mathcal{Z}_\mu \bigcap\mathcal{Z}_\nu = \emptyset $
+with map $\kappa:\{1,\cdots, n\} \rightarrow\{, \cdots, K\}$
+$|\mathcal{Z}_k|\approx n\frac{K-1}{K}$\\
+Learning:\\
+$\hat{f}^{-\nu}(x){=}
+\argmin_{f\in\mathcal{F}}\frac{\sum_{i\not\in\mathcal{Z}_\nu}(y_i-f(x_i))^2}{|\mathcal{Z}-\mathcal{Z}_{\nu}|}$\\
+Validation:\\
+$\hat{R}^{cv} = \frac{1}{n}\sum_{i\leq n}(y_i-\hat{f}^{-\kappa(i)}(x_i))^2$\\
+tendance to Underfit\\
+\textbf{Leave-one-out:} $K=n$ (unbiased but Var can be large $\leftarrow$ corr. datasets)
+
+\subsection*{Bootstrapping}
+Bootstrap samples: $\mathcal{Z}^*=\{\mathcal{Z}_1^*, \cdots\mathcal{Z}_n^*\}$\\
+each data point in $\mathcal{Z}_i^*$ was randomly drawn from $\mathcal{Z}$ with replacement.\\
+$e_0$ Estimator: the error rate for the test data (data that wasn't selected by the bootstrap) is assumed to be the error estimate (e.g. for classification):\\
+$\hat{\mathcal{R}}(S(\mathcal{Z}))=\frac{1}{B}\sum_{b=1}^B\sum_{z_i\not\in\mathcal{Z}^{*b}}\frac{\mathbb{I}_{c(x_i)\neq y_i}}{|n-\mathcal{Z}^{*b}|}$
+
+\subsection*{Jackknife}
+Estimate of an Estimator $\hat{S}_n$'s Bias.\\
+$\hat{S}^{JK}=\hat{S}_n-\mathrm{bias}^{JK}$ is JK Estimator.\\
+$\mathrm{bias}^{JK}{=}(n{-}1)(\tilde{S}_n{-}\hat{S}_m)$\\
+$\tilde{S}_n{=}\frac{1}{n}\sum_{i=1}^n\hat{S}_{n{-}1}^{({-}i)}$ avg. LOO Estimator.
+Debiased est. can have big variance!\\
+\textbf{Bootstrap Debiased} $\bar{S}{=}2\hat{S}{-}\frac{1}{B}\sum_b\hat{S}^*(b)$

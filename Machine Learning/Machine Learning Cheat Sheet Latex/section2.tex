@@ -1,0 +1,102 @@
+\section*{Linear Regression}
+\textbf{Data}:
+$Z={(x_i,y_i)\in \mathbb{R}^3 \times \mathbb{R}: 1 \leq i \leq n}$\\
+X are iids and Y depends on X.\\
+\textbf{Model}:
+$\mathbf{Y}=\beta_0 + \sum_{j=1}^d\mathbf{X_j}\beta_j \quad \mathbf{Y}\subset{\mathbb{R}}$\\
+Introduce $X_0=1$ and rewrite\\
+$\mathbf{Y}=\mathbf{X}^T\beta \quad \mathbf{X}\in\mathbb{R}^{(d+1)\times n}, \beta \in \mathbb{R}^{d+1}$\\
+additive Gaussian noise $\epsilon \sim \mathcal{N}(0,\sigma^2)$\\
+$\hat{y}=\mathbf{X}\hat{\beta}+\epsilon$\\
+$\hat{\beta} \sim \mathcal{N}(\beta, (\mathbf{X}^T\mathbf{X})^{-1}\sigma^2) $ and\\
+$p(Y|X,\beta, \sigma) \sim \mathcal{N}(Y|X^T\beta, \sigma^2)$
+
+A Regression has Optimum:\\
+$f^*(x) = \mathbb{E}_Y[Y|X=x]$
+
+
+\subsection*{Linear Regression}
+\textbf{Setting}: Minimize RSS.\\
+$\mathcal{L} = RSS(\beta)=\sum_{i=1}^n(y_i-x_i^T\beta)^2=$\\
+$=(\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)$\\
+$X\in\mathbb{R}^{n\times(d+1)}, y\in\mathbb{R}^n,  \beta\in\mathbb{R}^{d+1}$\\
+\textbf{Solution:} differentiate w.r.t $\beta$\\
+$\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{y}$\\
+Is an orth. projection with lowest variance of all unbiased estimates.\\
+\textbf{Prediction:} $\hat{y}{=}\mathbf{X}\hat{\beta}{=}\mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{y}$
+
+
+\subsection*{Ridge Regression (L2 penalty)}
+\textbf{Setting}: Penalize the $\beta$s\\
+$\mathcal{L} = \sum_{i=1}^n(y_i-x_i^T\beta)^2+\lambda\sum_{j=1}^d\beta_j^2 = $\\
+$=(\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)+\lambda\beta^T\beta$\\
+\textbf{Solution:} differentiate w.r.t $\beta$\\
+$\hat{\beta}^{ridge} = (\mathbf{X}^T\mathbf{X}+\lambda\mathbf{I})^{-1}\mathbf{X}^{T}\mathbf{y}$
+
+\subsection*{Lasso (L1 penalty)}
+\textbf{Setting:} seek for a sparse solution\\
+$\mathcal{L} = \sum_{i=1}^n(y_i-x_i^T\beta)^2+\lambda\sum_{j=1}^d|\beta_j| $\\\\
+$=(\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)+\lambda||\beta||_1$\\
+Lasso has no closed form.
+
+\subsection*{Bayesian Linear Regression}
+\textbf{Setting:} Define a prior over the $\beta$s.\\
+\textbf{e.g. Ridge:}\\
+Assume $\beta$s distributed with mean 0\\
+$p(\beta|\Lambda){=}\mathcal{N}(\beta|\mathbf{0},\Lambda^{-1}) \propto \mathrm{exp}(-\frac{1}{2}\beta^T\Lambda\beta)$
+
+\textbf{e.g. Linear Regression:}\\
+equivalent to ridge with $\Lambda{=}\lambda\mathbb{I}$, $\sigma{=}1$
+
+\textbf{Posterior}\\
+given observed $\mathbf{X},\mathbf{y}$,use Baye's theorem to find the posterior\\
+$p(\beta|\mathbf{X},\mathbf{y}, \Lambda, \sigma) = \mathcal{N}(\mu_{\beta}, \Sigma_{\beta})$\\
+$\mu_\beta = \sigma^2(\mathbf{X}^T\mathbf{X} +\sigma^2\Lambda)^{-1}\mathbf(X)^T\mathbf{y}$\\
+$\Sigma_\beta = \sigma^2(\mathbf{X}^T\mathbf{X} +\sigma^2\Lambda)^{-1}$
+
+\section*{Nonlinear Regression}
+\textbf{Idea:} Feature space transformation\\
+Model: $\mathbf{Y}=f(\mathbf{X})=\sum_{m=1}^M\beta_m h_m(\mathbf{X})$\\
+Transformation $h_m(\mathbf{X}):\mathbb{R}^d \rightarrow \mathbb{R}$
+
+
+\subsection*{Cubic Spline}
+e.g. for d=1 with knots at $\xi_1$ and $\xi_2$\\
+$h_1(X){=}1\quad h_3(X){=}X^2\quad h_5(X){=}(X{-}\xi_1)^3_+$
+$h_2(X){=}X\quad h_4(X){=}X^3\quad h_6(X){=}(X{-}\xi_2)^3_+$
+
+\subsection*{Wavelets}
+Functions that measure local properties of the underlying data. Keep the most important ones and get rid of the noise.
+
+\subsection*{Gaussian Process Regression}
+joint Gaussian over all outputs\\
+$\mathbf{y}=\mathbb{X}\beta+\epsilon \quad \epsilon\sim \mathcal{N}(\epsilon|0,\sigma\mathbb{I}_n)$\\
+We can rewrite the distribution\\
+$P(\begin{bmatrix}
+\mathbf{y}\\
+y_*\\
+\end{bmatrix}){=}\mathcal{N}(\mathbf{y}|\mathbf{0},\begin{bmatrix}
+\mathbf{C_n} & \mathbf{k} \\
+\mathbf{k^T} & c \\
+\end{bmatrix})$\\
+Such that for prediction:\\
+$p(y_*|\mathbf{x_*}, \mathbf{X}, \mathbf{y}){=} \mathcal{N}(y_*|\mu_{*}, \sigma^2_{*})$\\
+$\mu_{y_*} = \mathbf{k}^T\mathbf{C}_n^{-1}\mathbf{y}\quad \mathbf{C}_n=\mathbf{K}+\sigma^2\mathbb{I}$\\
+$\sigma^2_{*}{=}c{-}\mathbf{k}^T\mathbf{C}_n^{-1}\mathbf{k}\quad c{=}k(x_*,x_*){+}\sigma^2$\\
+$\mathbf{k}=k(x_*,\mathbf{X})$\\
+k is the kernel function.\\
+lengthscale in kernel: how far can we reliably extrapolate
+
+
+\section*{Bias-Variance tradeoff}
+Bias($\hat{f}$)$=\mathbb{E}[\hat{f}]-f^*$\\
+Var($\hat{f}$)$=\mathbb{E}[(\hat{f}-\mathbb{E}[\hat{f}])^2]$\\
+$|\mathcal{Z}|\downarrow \quad|\mathcal{F}|\uparrow\quad\Rightarrow\quad\mathrm{Var}\uparrow\quad\mathrm{Bias}\downarrow $\\
+$|\mathcal{Z}|\uparrow \quad|\mathcal{F}|\downarrow\quad\Rightarrow\quad\mathrm{Var}\downarrow\quad\mathrm{Bias}\uparrow $
+
+\subsection*{Squared Error Decomposition}
+$\mathbb{E}_D\mathbb{E}_{X,Y}[(\hat{f}(X)-Y)^2]=$\\
+$\mathbb{E}_{X,Y}[(\mathbb{E}_Y[Y|X]-Y)^2]$ (noise)\\
+$+\mathbb{E}_X\mathbb{E}_D[(\hat{f}_D(X)-\mathbb{E}_D[\hat{f}(X)])^2]$ (var.)\\
+$+\mathbb{E}_X[(\mathbb{E}_D[\hat{f}_D(X)]-\mathbb{E}_Y[Y|X])^2]$ (bias$^2$)
+(can be derivated by vanishing of the crossproducts)
