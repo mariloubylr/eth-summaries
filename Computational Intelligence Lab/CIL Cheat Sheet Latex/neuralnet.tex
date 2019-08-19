@@ -1,0 +1,45 @@
+\section*{Neural Networks}
+$F^\sigma(\mathbf{x};\mathbf{W}){=}\sigma(\mathbf{W}\mathbf{x}){\Rightarrow}F^\sigma_j(\mathbf{x};\mathbf{W}){=}\sigma(\mathbf{w}_j^\top\mathbf{x})$, w.
+$\mathbf{W}{=}(\mathbf{w}_1\dotsi\mathbf{w}_m)^T$
+mapping $\mathbb{R}^n\rightarrow\mathbb{R}^m$ between 2 layers\\
+$\mathbf{x}^{(l)}=\sigma(\mathbf{W}^{(l)}\mathbf{x}^{(l-1)})$, $1\leq l\leq L$
+
+\subsection*{Activation Functions}
+\textbf{Sig.}
+$\sigma(x){=}\frac{1}{1+\exp^{-x}}$,$\nabla_x\sigma(x){=}\sigma(x)(1{-}\sigma(x))$, $\sigma^{-1}(x)=\log(1/(1{-}x))$, $1{-}\sigma(x){=}\sigma(-x)$\\
+\textbf{ReLU}
+$R(x){=}\max\{0,x\}$ has simple derivative on $\mathbb{R}-\mathbf{0}$ and reduces vanishing gradient problem
+
+\subsection*{Output Layer}
+\textbf{Linear Regression} $\mathbf{y}{=}\mathbf{W}^{(L)}\mathbf{x}^{(L-1)}$\\
+\textbf{Logistic} binary classif. (one output)
+$y_1=P(Y=1|\mathbf{x})=\frac{1}{1+\exp{[-\mathbf{w}^T\mathbf{x}]}}$\\
+\textbf{Soft-Max} K-Multiclass\\
+$y_k{=}P(Y{=}k|\mathbf{x}){=}{\text{e}{[\mathbf{w}_k^T\mathbf{x}]}/}{\sum_{j=1}^K\text{e}{[\mathbf{w}_j^T\mathbf{x}]}$
+\subsection*{Loss-Functions}
+\textbf{Squared} $l(y^*;y){=}\frac{1}{2}(y^*-y)^2$\\
+\textbf{Cross-Entropy} for classification\\
+$l(y^*;y){=}{-}y^*\log y{-}(1{-}y^*)\log(1{-}y)$
+\textbf{Empirical Risk}\\
+$\mathcal{L}(\theta;\mathcal{X})=\frac{1}{T}\sum_{l=1}^Tl(y_t;y(\mathbf{x}_t;\theta))$ for\\ weights $\theta=(\mathbf{W}^{(1)}\dotsi\mathbf{W}^{(L)})$ and
+training data $\mathcal{X}=\{(\mathbf{x}_t,y_t),1\leq t\leq T\}$
+
+\subsection*{Regularization}
+favors smaller weights\\
+$\mathbf{L_2}$: $\mathcal{L}_{\lambda}(\theta;\mathcal{X})=\mathcal{L}(\theta;\mathcal{X})+\frac{\lambda}{2}\|\theta\|_2^2$\\
+\textbf{Dropout} training with noise
+
+\subsection*{Backpropagation}
+costs $\mathcal{O}(n)$ for NN with $n$ nodes
+$\frac{\partial x_i^{(l)}}{\partial x_k^{(l-n)}}{=}\sum_j\frac{\partial x_i^{(l)}}{\partial x_j^{(l-1)}}\frac{\partial x_j^{(l-1)}}{\partial x_k^{(l-n)}}{=}\sum_j \mathbf{J}_{i j}^{(l)}\frac{\partial x_j^{(l-1)}}{\partial x_k^{(l-n)}}$\\
+$\frac{\partial \mathbf{x}^{(l)}}{\partial \mathbf{x}^{(l-n)}}{=}\sum_j \mathbf{J}^{(l)}\frac{\partial \mathbf{x}^{(l-1)}}{\partial \mathbf{x}^{(l-n)}}=
+\mathbf{J}^{(l)}\dotsi\mathbf{J}^{(l-n+1)}$\\
+Backprop: $\nabla^T_{\mathbf{x}^{(l)}}l=\nabla^T_{\mathbf{y}}l\cdot\mathbf{J}^{(l)}\dotsi\mathbf{J}^{(l+1)}$\\
+$\frac{\partial l}{\partial w_{ij}^{(l)}}{=}\frac{\partial l}{\partial x_i^{(l)}}\frac{\partial x_i^{(l)}}{\partial w_{ij}^{(l)}}$,$\frac{\partial x_i^{(l)}}{\partial w_{ij}^{(l)}}{=}\sigma'(\mathbf{w}_i^{(l)T}\mathbf{x}^{(l-1)})x_j^{(l-1)}$
+
+\subsection*{CNN}
+\textbf{Convolutional Layers}
+$F_{n,m}(\mathbf{x};\mathbf{w})$\\
+${=}\sigma(b{+}\sum_{k=-i}^i\sum_{l=-i}^iw_{kl}x_{n+k,m+l})$\\
+Weight sharing and shift-invariant filtering thus less parameters and computational power required\\
+\textbf{Pooling} Take avg or max over wind. Reduce size or extract features.

@@ -1,0 +1,49 @@
+\section*{Linear Autoencoder}
+Encoder $\mathbf{C}{\in}\mathbb{R}^{k\times m}$,
+Decoder $\mathbf{D}{\in}\mathbb{R}^{m\times k}$\\
+lin. map: $\mathbf{F}: \mathbb{R}^m{\rightarrow}\mathbb{R}^m$ w. limited rank.
+performs low rank approximation
+$\ell(\mathbf{x};\theta){=}\frac{1}{2}\|\mathbf{x}{-}\mathbf{\hat{x}}(\theta)\|^2$\\
+$\mathbf{\hat{x}}(\theta){=}\mathbf{DCx},\theta{=}(\mathbf{C},\mathbf{D})$\\
+\textbf{Reconstruction error}\\ $J(\theta)=\frac{1}{n}\sum_{i=1}^n\ell(\mathbf{x}_i,\theta)=$\\
+$\frac{1}{2n}\sum_{i=1}^n\|\mathbf{x}_i-\mathbf{\hat{x}}_i(\theta)\|=\frac{1}{2n}\|\mathbf{X}-\mathbf{\hat{X}}(\theta)\|_F^2$\\
+\textbf{Optimal Solution}\\
+$\mathbf{C}^*{=}\mathbf{U}_k^\top$, $\mathbf{D}^*{=}\mathbf{U}_k$, s.t. $\mathbf{X}{=}\mathbf{U\Sigma V^\top}$\\
+$\mathbf{\hat{X}}{=}\mathbf{D^*C^*X}{=}\mathbf{U_k U_k^\top}(\mathbf{U\Sigma \V^\top}){=}\dotsi{=}\mathbf{U\Sigma_k V^\top}$ opt. by EY.
+not the only optimal solution, i.e. limited interpretability
+\subsection*{Weight Sharing}
+$\mathbf{D{=}C^\top}$ reduces ambiguity but not modeling power. Mapping unique.
+
+\section*{PCA - Principle Component Analysis}
+project data $\mathbf{X}{=}[\mathbf{x_1}\dotsi\mathbf{x_N}]{\in}\mathbb{R}^{D \times N}$ to basis of orthogonal components. \\
+\textbf{Centralise data} by substracting the mean $\overline{\mathbf{X}}{=}\mathbf{X}{-}[\overline{\mathbf{x}}\dotsi\overline{\mathbf{x}}], \overline{\mathbf{x}}{=}\frac{1}{N} \sum_{n=1}^N \mathbf{x}_n$.
+\subsection*{Variance-Covariance Matrix}
+$\mathbf{\Sigma}{=}\frac{1}{N} \sum_{n=1}^N (\mathbf{x}_n{-}\overline{\mathbf{x}}) (\mathbf{x}_n{-}\overline{\mathbf{x}})^\top{=}\frac{1}{N} \overline{\mathbf{X}}\overline{\mathbf{X}}^\top$.
+ symmetric $\Sigma{=}\mathbf{U \Lambda U}^\top$, $\mathbf{U}$ orth.\\
+\textbf{New orthogonal basis} $\mathbf{U}_K$, $K{<<}D$
+$\overline{\mathbf{Z}}_K{=}\mathbf{U}_K^\top \overline{\mathbf{X}}$ and $\tilde{\overline{\mathbf{X}}}{=}\mathbf{U}_k \overline{\mathbf{Z}}_K$ opt. rec.
+
+\subsection*{Iterative View}
+Residual $\mathbf{r}_i$: $\mathbf{x}_i{-}\tilde{\mathbf{x}}_i{=}\mathbf{I}{-}\mathbf{uu}^\top \mathbf{x}_i$\\
+Covariance  $\frac{1}{N} \sum_{i=1}^N \mathbf{r_i}\mathbf{r_i}^\top{=}\Sigma{-} \lambda \mathbf{uu}^\top$ \\
+$1^{st}$eigvec of $\Sigma{-}\lambda \mathbf{u u}^\top{=}2^{nd}$eigvec of $\Sigma$\\
+get $d$ princ. eigvecs of $\Sigma$ by iteration
+\subsection*{Power Method}
+$\mathbf{v}_{t+1}{=}\frac{\mathbf{Av}_t}{\|\mathbf{Av}_t\|}$, $\lim_{t\rightarrow\infty}\mathbf{v}_t=\mathbf{u}_1$\\
+assume $\langle\mathbf{u}_1,\mathbf{v}_0\rangle\neq0$ and $|\lambda_1|>|\lambda_j|$
+\subsection*{1-D PCA to a line}
+\textbf{Line} 
+$\mathbf{\mu}{+}\mathbb{R}\mathbf{u}{\equiv}\{\mathbf{v}{\in}\mathbb{R}^m{:}\exists z \text{ s.t. }\mathbf{v}=\mathbf{\mu}+z\mathbf{u}\}$
+$\mathbf{\hat{x}}{=}\mathbf{\mu}{+}\langle\mathbf{x}{-}\mathbf{\mu},\mathbf{u}\rangle\mathbf{u}{=}\argmin_{\mathbf{\hat{x}}{\in}\mathbf{\mu}{+}\mathbb{R}\mathbf{u}}\|\mathbf{x}{-}\mathbf{\hat{x}}\|^2$\\
+\textbf{Center the data} to find unique $\mathbf{u}$\\
+$\mathbf{u}{\leftarrow}\argmin[\frac{1}{n}\sum_{i=1}^n\|\langle\mathbf{u}, \mathbf{x_i}\rangle\mathbf{u}{-}\mathbf{x_i}\|^2]$
+yields $\mathbf{u}{\leftarrow}\argmax[\frac{1}{n}\sum_{i=1}^n\langle\mathbf{u},\mathbf{x_i}\rangle^2]=$\\
+$\argmax[\mathbf{u}^\top(\frac{1}{n}\sum_{i=1}^n\mathbf{x_ix_i}^\top)\mathbf{u}^\top]=$\\
+$\argmax[\mathbf{u}\frac{1}{n}\mathbf{XX}^\top\mathbf{u}^\top] {=} \argmax[\mathbf{u}\mathbf{\Sigma}\mathbf{u}^\top]$
+\textbf{Lagrangian Optimization}\\
+$\mathcal{L}(\mathbf{u},\lambda){=}\mathbf{u}^\top\mathbf{\Sigma}\mathbf{u}{+}\lambda\langle\mathbf{u},\mathbf{u}^\top\rangle$\\
+$\nabla_{\mathbf{u}}\mathcal{L}(\mathbf{u},\lambda){\stackrel{!}{=}}0{\Leftrightarrow}\mathbf{\Sigma u}{=}\lambda\mathbf{u}$,ie $\mathbf{u}$ princ. vec
+
+
+
+

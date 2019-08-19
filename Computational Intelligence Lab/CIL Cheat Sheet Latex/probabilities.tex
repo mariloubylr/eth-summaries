@@ -1,0 +1,59 @@
+\section*{Probabilities}
+\subsection*{Expectation}
+$\mathbbm{E}[X]=\int_{\Omega}xf(x)dx=\int_{\omega}xP[X{=}x]dx$
+$\mathbb{E}_{Y|X}[Y]=\mathbb{E}_{Y}[Y|X]$\\
+$\mathbb{E}_{X}[f(Y)]{=}f(Y)$ if $P(Y|X)=P(Y)$
+\subsection*{Variance \& Covariance}
+$Var(X){=}\mathbb{E}[(X{-}\mathbb{E}[X])^2]{=}\mathbb{E}[X^2]{-}\mathbb{E}[X]^2$\\
+$\mathrm{Var}[X+Y]{=}\mathrm{Var}[X]+\mathrm{Var}[Y]\quad XY iid$\\
+$\mathrm{Var}[\alpha X]=\alpha^2\mathrm{Var}[X]$
+
+$Cov(X,Y)=\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]$
+\subsection*{Conditional Probabilities}
+$P[X|Y]=\frac{P[X,Y]}{P[Y]}$, 
+$P[\bar{X}|Y]=1-P[X|Y]$
+\textbf{Bayes}: $P(X|Y){=}\frac{P(Y|X)P(X)}{P(Y)}$
+\subsection*{Distributions}
+$\mathcal{N}(x|\mu, \sigma^2){=}(\sqrt{2\pi\sigma^2})^{-1}\mathrm{exp}^{-(x-\mu)^2/(2\sigma^2)}$\\
+$\mathcal{N}(x|\mu, \Sigma){=}\frac{1}{(2\pi)^{{D}/{2}}|\mathbf{\Sigma}|^{{1}/{2}}}e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^\top{\mathbf{\Sigma}^{-1}}(\mathbf{x}{-}\mathbf{\mu})}$
+$\mathrm{Exp}(x|\lambda){=}\lambda e^{-\lambda x}$, $\mathrm{Ber}(x|\theta){=}\theta^x (1{-}\theta)^{(1-x)}$
+
+\subsection*{Kullback-Leibler Divergence}
+divergence of distr P \& Q $D_{KL}(P||Q){=}$\\$-\sum_{x\in\mathcal{X}}P(x)\log\frac{Q(x)}{P(x)}{=}\sum_{x\in\mathcal{X}}P(x)\log\frac{P(x)}{Q(x)}$
+
+\subsection*{Matrix Derivations}
+$\frac{\partial(\mathbf{b}^\top \mathbf{x})}{\partial \mathbf{x}}{=}\frac{\partial (\mathbf{x}^\top \mathbf{b})}{\partial \mathbf{x}}{=} \mathbf{b}$, 
+$\frac{\partial (\mathbf{x}^\top \mathbf{x})}{\partial \mathbf{x}}{=} 2\mathbf{x}$, \\
+$\frac{\partial (\mathbf{b}^\top \mathbf{A}\mathbf{x}) } {\partial \mathbf{x}}{=}\mathbf{A}^\top \mathbf{b}$,
+$\frac{\partial (\mathbf{x}^\top \mathbf{A}\mathbf{x})} {\partial \mathbf{x}} {=} (\mathbf{A}^\top{+}\mathbf{A})\mathbf{x}$,\\
+$\frac{\partial(\mathbf{c}^\top \mathbf{X} \mathbf{b})} {\partial \mathbf{X}}{=}\mathbf{c}\mathbf{b}^\top$, 
+$\frac{\partial (\mathbf{c}^\top \mathbf{X}^\top \mathbf{b})}{\partial \mathbf{X}}{=}\mathbf{b}\mathbf{c}^\top$,$\frac{\partial\log|\mathbf{A}|}{\partial \mathbf{A}}{=}\mathbf{A}^{-\top}$\\
+$\frac{\partial(\| \mathbf{x}-\mathbf{b} \|_2)}{\partial \mathbf{x}}{=}\frac{\mathbf{x}-\mathbf{b}}{\|\mathbf{x}-\mathbf{b}\|_2}$, 
+$\frac{\partial(\|\mathbf{x}\|^2_2)}{\partial \mathbf{x}}{=}\frac{\partial (\mathbf{x}^\top \mathbf{x})}{\partial \mathbf{x}} {=}2\mathbf{x}$,\\
+$\frac{\partial (\|\mathbf{X}\|_F^2) }{\partial \mathbf{X}}{=} 2\mathbf{X}$,
+$\frac{\partial(\|\mathbf{Ax - b}\|_2^2)}{\partial \mathbf{x}}{=} \mathbf{2(A^\top Ax-A^\top b)}$
+$\mathbf{X}^T\mathbf{X}$: invertible if eigvals ${\neq}0$ but instable if big ratio last/first eigval.
+\subsection*{Derivatives}
+\textbf{chain rule} $\frac{d}{dx}f(g(x){=}f'(g(x))g'(x)$\\
+$\frac{d}{dx}\cos(x){=-}\sin(x)$ $\frac{d}{dx}\sin(x){=}\cos(x)$\\
+$\frac{d}{dx}\exp(x){=}\exp$ $\frac{d}{dx}\log(x){=}\frac{1}{x}$
+
+\section*{Optimization}
+\subsection*{Gradient Descent}
+$\theta^{\mathrm{new}}\leftarrow\theta^{\mathrm{old}}-\eta\nabla_{\theta}\mathcal{L}(\theta)$\\
+Convergence isn't guaranteed.\\
+Less zigzag by adding momentum: \\$\theta^{(l+1)}\leftarrow\theta^{(l)}-\eta\nabla_{\theta}\mathcal{L}+\mu(\theta^{l}-\theta^{(l-1)})$
+
+\subsection*{Stochastic Gradient Descent}
+Assume $\mathcal{L}(\theta){=}\sum_{n=1}^N\mathcal{L}_n(\theta)$\\
+$\theta^{\mathrm{new}}{\leftarrow}\theta^{\mathrm{old}}{-}\eta\nabla_{\theta}\mathcal{L}_n(\theta)$ $n{\sim}\text{uniform}$
+this requires the function to be L-smooth to avoid ocillations
+\subsection*{Jensen's Inequality}
+$\sigma(\frac{\sum a_ix_i}{\sum a_i}) \geq \frac{\sum a_i\sigma(x_i)}{\sum a_i}$ if $\sigma$ concave (log)\\
+for distribution $a$: $\sum_ia_i=1$
+
+\subsection*{Convexity}
+$f$ convex if $\forall x_1,x_2{\in}\mathbf{X},\forall t{\in}[0,1]$\\
+$ f(tx_1+(1{-}t)x_2)\leq tf(x_1)+(1{-}t)f(x_2)$\\
+if $f$ is twice diff., it is convex iff it's double Hessian is positive semi-definite
+A convex function has a unique minimum. sum of conv.is conv.

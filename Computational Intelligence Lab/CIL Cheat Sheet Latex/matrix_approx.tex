@@ -1,0 +1,34 @@
+\section*{Matrix Approximation \& Reconst}
+\textbf{Exact Rec.} $\min_\mathbf{B}\|\mathbf{B}\|_*$ s.t.$\|\mathbf{A}-\mathbf{B}\|_\mathbf{G}=0$
+\textbf{Approx. Rec.} $\min_\mathbf{B}\|\mathbf{A-B}\|_\mathbf{G}^2$ s.t.$\|\mathbf{B}\|_*\leqr$,
+\subsection*{SVD (e.g recommendation system)}
+$\mathbf{U}$ users to factors associations
+$\mathbf{V}$ items to factors associations
+$\mathbf{\Sigma}$ level of strength of each factor.
+\textbf{Limitations} matrix incomplete. can't run SVD. Lower rank might not be the best solution. Ratings should not be outside the expected range
+
+\subsection*{Beyond SVD}
+optimize $\min_{\text{rk}(\mathbf{B})=k}[\sum_{(i,j)\in\mathcal{I}}(a_{ij}{-}b_{ij})^2]$\\
+$\mathcal{I}{=}\{(i,j)}\}$ observed values\\
+$\|\mathbf{X}\|_\mathbf{G}=\sqrt{\sum_{i,j}g_{ij}x_{ij}^2}$, $g_{ij}\in\{0,1\}$\\
+$\min_{\text{rk}(\mathbf{B})}\|\mathbf{A}-\mathbf{B}\|_\mathbf{G}^2$ NP hard
+
+\subsection*{Alternating Least Square}
+parametrize $\mathbf{B}_{rk(k)}{=}\mathbf{UV},\mathbf{U}{\in}^{m\times k}, \mathbf{V}{\in}^{k\times n}$
+$f(\mathbf{U},\mathbf{V}){=}\frac{1}{|\mathcal{I}|}\sum_{(i,j)\in\mathcal{I}}(a_{ij}{-}\langle\mathbf{u}_i,\mathbf{v}_j\rangle)^2 = \sum_{i}[\sum_{j:(i,j)\in\mathcal{I}}(a_{ij}{-}\langle\mathbf{u}_i,\mathbf{v}_j\rangle)^2]{=}\sum_if(\mathbf{U},\mathbf{v}_i)$. \\
+$f$ is convex for fixed $\mathbf{U}$ in $\mathbf{V}$ and vice-versa but not jointly\\
+\textbf{Regularise} $\Omega(\mathbf{U},\mathbf{V})=\|\mathbf{U}\|_F^2{+}\|\mathbf{V}\|_F^2$\\
+\textbf{Minimise} $f(\mathbf{U},\mathbf{V})+\mu\Omega(\mathbf{U},\mathbf{V})$ alternate between $\mathbf{U}$ and $\mathbf{V}$, ie:\\
+$f(\mathbf{U},\mathbf{v}_i)=\sum_{(i,j)\in \mathcal{I}} (a_{i,j} - \langle \mathbf{u}_j,\mathbf{v}_i \rangle)^2$
+\subsection*{Convex Relaxation}
+$\text{rank}(\mathbf{B})\geq\|\mathbf{B}\|_*$ for $\|\mathbf{B}\|_2\leq1$\\
+$\min_{\mathbf{B}\in\mathcal{P}_k}\|\mathbf{A}-\mathbf{B}\|_\mathbf{G}^*$, $\mathcal{P}_k=\{\mathbf{B}:\|\mathbf{B}\|_*\leq k\}$
+$\mathcal{P}_k\supersetq\mathcal{Q}_k=\{\mathbf{B}:\text{rank}\mathbf{B}=k\}$\\
+$\mathbf{B}^*{=}\text{shrink}_\tau(\mathbf{A}){=}$\\
+$\argmin_\mathbf{B}\{\frac{1}{2}\|\mathbf{A}{-}\mathbf{B}\|_F^2{+}\tau\|\mathbf{B}\|_*\}$ thus\\
+$\mathbf{B}^*{=}\mathbf{U}\mathbf{D}_\tau\mathbf{V}^\top$,
+$\mathbf{D}_\tau{=}\text{diag}(\max(0,\sigma_i{-}\tau))$
+\textbf{Shrinkage Iterations} for $\eta\geq0$\\
+$\mathbf{B}_{t+1}=\mathbf{B}_t{+}\eta_t\Pi(\mathbf{A}-\text{shrink}_\tau(\mathbf{B}_t))$\\
+$\Pi(\mathbf{X})=\begin{case}x_{ij}\text{ if }(i,j)\in\mathcal{I}\text{,  }0\text{ otw.}\end{case}$\\
+generalisation guarantees $\Pi(\mathbf{A})=\mathbf{A}^*$ ie $\mathbf{B}^*{=}\argmin_{\mathbf{B}}\{\|\mathbf{B}\|_*\}$ s.t. $\Pi(\mathbf{A}{-}\mathbf{B}){=}\mathbf{0}$

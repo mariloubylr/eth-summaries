@@ -1,0 +1,37 @@
+\section*{Generative Models}
+\subsection*{VAE - Variatonal Autoencoder}
+find $\mathbf{x}\in\mathbb{R}^n$ by sampling $\mathbf{z}\in\mathbb{R}^m$ from simple distribution and set
+$\mathbf{x}=F_\theta(\mathbf{z})$ where $F_\theta:\mathbb{R}^m\rightarrow \mathbb{R}^n$, deterministic DNN, since $\mathbb{E}_\mathbf{x}[f(\mathbf{x})]{=}\mathbb{E}_\mathbf{z}[f(F_\theta(\mathbf{z}))]$\\
+Requires $F_\theta^{-1}$ often impossible to get.\\
+\textbf{ELBO - evidence lower bound}\\
+learn parameters of distribution $p_\theta$ instead of deterministic $F_\theta$\\
+$\log p_\theta(\mathbf{x}){=}\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(\mathbf{x})]{=}$\\
+$\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[\log\frac{p_\theta(\mathbf{x}|\mathbf{z})p_\theta(\mathbf{z})q_\theta(\mathbf{z}|\mathbf{x})}{p_\theta(\mathbf{z}|\mathbf{x})q_\theta(\mathbf{z}|\mathbf{x})}]{=}$\\
+$\mathbb{E}_{ q_\phi(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]-$\\
+$KL(q_\phi(\mathbf{z}|\mathbf{x})|p_\theta(\mathbf{z})){+}KL(q_\phi(\mathbf{z}|\mathbf{x})|p_\theta(\mathbf{z}|\mathbf{x})){\geq}$\\
+$\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(\mathbf{x}|\mathbf{z})]{-}KL(q_\phi(\mathbf{z}|\mathbf{x})|p_\theta(\mathbf{z}))]$\\
+${=}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[-\log q_\phi(\mathbf{z}|\mathbf{x}){+}\log p_\theta(\mathbf{x}, \mathbf{z})]{=}$\\
+$=ELBO(\phi,\theta){=}\mathcal{L}(\mathbf{x};\theta)$\\
+maxim. wrt $\phi$ for inference model\\
+maxim. wrt $\theta$ for generative model
+
+\textbf{stochastic approximation}\\
+Update for generative model:\\
+$\nabla_\theta\mathbb{E}_{q_\phi}[\log p_\theta(\mathbf{x}|\mathbf{z})]{=}\mathbb{E}_{q_\phi}[\nabla_\theta \log p(\mathbf{x}|\mathbf{z})]$\\
+$\approx\frac{1}{L}\sum_{r=1}^L\nabla_\theta\log p(\mathbf{x}|\mathbf{z}^{(r)})$, $z^{(r)}\sim q_\phi(\cdot|\mathbf{x})$\\
+(by Monte Carlo approximation)\\
+Update for inference model:\\
+$\nabla_\phi\mathbb{E}_{q_\phi}[\mathcal{L}(\mathbf{x},\mathbf{z})]{=}\int \mathcal{L}(\mathbf{x},\mathbf{z}) \nabla_\phi q_\phi(\mathbf{z}|\mathbf{x})d\mathbf{z}$ \\
+$=\mathbb{E}_{q_\phi}[\mathcal{L}(\mathbf{x}, \mathbf{z})\nabla_\phi\log q_\phi(\mathbf{z}|\mathbf{x})]$ hard!\\
+variance in gradient usually high
+
+\textbf{Reparametrization Trick}\\
+$\mathbf{z}=g_\phi(\zeta|\mathbf{x}), \zeta \sim $ simple distribution\\
+$\nabla_\phi\mathbb{E}_{q_\phi}[\mathcal{L}(\mathbf{x},\mathbf{z})]{\approx}\frac{1}{L}\sum_{r=1}^L\nabla_\phi\mathcal{L}(\mathbf{x},g_\phi(\zeta^{(r)}))$\\
+easier to sample and differentiable by $\phi$ since the $\mathbf{z}$ are now deterministic. backprop. can be used
+\subsection*{GAN-Generative Adversarial Net.}
+generator $G$ and discriminator $D$ learn to fool each others.\\
+$\min_G\max_D\mathbb{E}_{\mathbf{x}\sim p_{data}(\mathbf{x})}[\log D(\mathbf{x})]$\\
+${+}\mathbb{E}_{\mathbf{z}\sim p_z(\mathbf{z})}}[\log(1- D(G(\mathbf{z}))]$\\
+Hard to train, might not converge/learn to generate a few samples
+generates sharper images since it can predict high frequency details. But can only generate/sample

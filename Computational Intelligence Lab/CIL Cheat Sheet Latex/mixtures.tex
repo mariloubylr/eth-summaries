@@ -1,0 +1,55 @@
+\section*{Mixtures}
+
+\subsection*{K-Means}
+\textbf{Objective} 
+$J(\textbf{U},\textbf{Z}){=}\sum_{i}^N\sum_{j}^K z_{i j}||\textbf{x}_i{-}\textbf{u}_j||^2$\\
+$=||\textbf{X}-\textbf{U}^T\textbf{Z}||^2$, $\sum_{k=1}^K z_{k i}=1$\\
+$\textbf{X}=[\textbf{x}_1 \dotsi \textbf{x}_N]\in \mathbb{R}^{D \times N}$ data matrix\\
+$ \textbf{U}=[\textbf{u}_1 \dotsi \textbf{u}_K]\in\mathbb{R}^{D\times K}$ centroids\\
+\textbf{Recursive optimal assignments}
+\\
+E: $z_{i j}^*{=}\begin{cases}1\text{ if }j{=}\argmin_k||\textbf{x}_i-\textbf{u}_k||^2\end{cases}$
+\\
+M: $\nabla\textbf{u}_j J(\textbf{U}, \textbf{Z})\stackrel{!}{=}0 \Rightarrow\textbf{u}_{j}^*=\frac{\sum_{i=1}^N z_{i j}\textbf{x}_i }{\sum_{i=1}^N z_{ij}}$\\
+guaranteed convergence but non-convex objective\\
+K-means solves $\argmin_Z\|\mathbf{X}-\mathbf{UZ}\|_F^2$
+\subsection*{K-Means++}
+Init. with incremental $D^2$ sampling
+sample first centroid rand. $U_1=\{\textbf{x}_I\}$
+$D_i = \min_{\textbf{u}\in U_k||\textbf{x}_i- \textbf{u}||}$
+$U_{k+1}=U_k\cup\{\textbf{x}_I\}$\\
+for $I \sim \text{Cat(p)}$,  $p_i{=}{D_i^2}/{\sum_{j=1}^N}D_j^2$\\
+More expensive but better results.
+
+\subsection*{K-Means Core Sets}
+sample core set of m centroids\\
+$I{\sim}\text{Cat(p)}$, $p_i{=}{1}/{2 N}{+}{D_i^2}/{2 \sum_{j=1}^N D_j^2 }$\\
+ where $D_i^2=||\textbf{x}_i-\frac{1}{N}\sum_{i=1}^N\textbf{x}_i||^2$\\
+give each sample weight $1/mp_i$ and weighted K-Mean on this core-set.
+
+\subsection*{Finite Mixture Model}
+Probabilistic assignment to clusters.
+$p(\mathbf{x},\theta)=\sum_{j=1}^K\pi_j p(\mathbf{x};\theta)$\\ where $\theta=(\pi, \theta_1, \dotsi, \theta_K)$\\
+and $\pi\geq0, \sum_{i=1}^K\pi_i=1$\\
+\textbf{e.g Gaussian Mixture Model}\\
+$p(\mathbf{x};\theta_j) = p(\mathbf{x};\mathbf{\mu_j},\mathbf{\Sigma_j})$ (normal dist.)
+Complete data distribution:\\
+$p(\mathbf{x},\mathbf{z};\theta)=\prod_{j=1}^K(\pi_j p(\mathbf{x};\theta_j))^{z_j}$ where $z_j$ latent and $P(z_j=1)=\pi_j$\\
+Posterior Probabilities: 
+ $p(\mathbf{z}_k{=}1|\mathbf{x}) = $\\$\frac{p(\mathbf{z}_k=1) p(\mathbf{x}|\mathbf{z}_k=1)}{\sum_{l=1}^K p(\mathbf{z}_l = 1) p(\mathbf{x} | \mathbf{z}_l = 1)} = \frac{\boldsymbol{\pi}_k \mathcal{N}(\mathbf{x} | \boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)}{\sum_{l=1}^K \boldsymbol{\pi}_l \mathcal{N}(\mathbf{x} | \boldsymbol{\mu}_l, \boldsymbol{\Sigma}_l)}$
+
+\subsection*{Maximum Likelihood for MM}
+$\argmax_\theta\sum_{i=1}^N log[\sum_{j=1}^K\pi_j p(\mathbf{x_i};\theta_j)]$ has no closed form solution\\
+$log[\sum_{j=1}^K\pi_j p(\mathbf{x_i};\theta_j)]=$\\
+$log[\sum_{j=1}^K q_j \frac{\pi_j p(\mathbf{x_i};\theta_j)}{q_j}]\geq$\\
+$\sum_{j=1}^K q_j[\log p(\mathbf{x};\theta_j)+\log \pi_j-\log q_j]$\\
+\textbf{Lagrangian}\\
+$\mathcal{L}{=}\max_q\{\sum_{j=1}^Kq_j[\log p(\mathbf{x};\theta_j){+}\log \pi_j-\log q_j]{+}\lambda (\sum_{j=1}^Kq_j-1)\}$\\
+\textbf{E-Step} compute assignments\\
+$\nabla q_j{\stackrel{!}{=}}0\Rightarrow
+q_j^*{=}\frac{\pi_jp(\mathbf{x};\theta_j)}{\sum_{l=1}^K\pi_l p(\mathbf{x};\theta_l)}{=}p(z_j{=}1|\mathbf{x})$\\
+\textbf{M-Step} optimize clusters\\
+$\mathbf{\mu}_j^*=\frac{\sum_{i=1}^N q_{i j} \mathbf{x}_i}{\sum_{i=1}^N q_{i j}}$,
+$\mathbf{\pi}_j := \frac{1}{N} \sum_{i=1}^N q_{i j}$, and\\ $\Sigma_j = \frac{\sum_{i=1}^N q_{i j} (\mathbf{x}_n - \mathbf{\mu}_j)(\mathbf{x}_j - \mathbf{\mu}_j)^T}{\sum_{i=1}^N q_{i j}}$
+EM requires more steps and computation to reach convergence than K-Mean\\
+\textbf{Singularities of GMM} happen when a cluster shrinks to fit exactly one data point. log likelihood $\rightarrow \infty$. Bad convergence

@@ -1,0 +1,42 @@
+\section*{Word Embeddings}
+\textbf{latent vect model} $w{\rightarrow}(\mathbf{x}_w,b_w){\in}\mathbb{R}^{d+1}$
+\subsection*{Context Models}
+semantic from by co-occurences, e.g.
+skip-gram $p(w|w')$ $w$ in context of $w'$
+
+\textbf{Log-likelihood}\\
+$\mathcal{L}(\theta|\mathbf{w}){=}\sum_{t=1}^T\sum_{\delta\in\mathcal{I}}\log p_\theta(w^{(t+\delta)}|w^{(t)})$\\
+$\hat{\theta}{=}\argmax_{\theta}\mathcal{L}(\theta|\mathbf{w})$ large cardinality\\
+\textbf{Log-bilinear model}\\
+ $\log p(w|w'){=}\langle\mathbf{x}_w,\mathbf{x}_{w'}\rangle{+}b_w{+}c$\\
+ ${b_w \uparrow\Rightarrow p_\theta(w|w')\uparrow,$\\
+ $\angle(\mathbf{x}_w{\mathbf{x}_{w'})\downarrow{\Rightarrow}p_\theta(w|w')\uparrow}$\\
+ \textbf{Softmax} $p_\theta(w|w'){=}\frac{\exp[\langle\mathbf{x}_w,\mathbf{x}_{w'}\rangle+b_w]}{Z_\theta(w')}$\\
+ where $Z_\theta(w'){=}\sum_{v\in\mathcal{V}}\exp[\langle\mathbf{x}_v,\mathbf{x}_{w'}\rangle{+}b_v]$\\
+ \textbf{Context Vectors} input \& output context vectors to get rid of the bilinearity. $\log p_\theta(w|w'){=}\langle\mathbf{x}_w,\mathbf{y}_{w'}\rangle{+}b_w$ 
+ 
+ \subsection*{Negative Sampling}
+$\triangle^+$ observed pair, $\triangle^- {\sim}p_n$ where\\
+$(w_i,w_j){\sim}p_n(i,j)$ rand. context words\\
+ $w_j{\propto}P(w_j)^\alpha, \alpha{=}\frac{3}{4}$oversample by $k{\leq} 20$\\
+\textbf{Maximize logistic Regression}\\
+ $\mathcal{L}(\theta}){=}\sum_{(i,j)\in\triangle^+}\log\sigma(\langle\mathbf{x}_i,\mathbf{y}_j\rangle)+$\\
+ $\sum_{(i,j)\in\triangle^-}\log\sigma(-\langle\mathbf{x}_i,\mathbf{y}_j\rangle), \sigma(z){=}\frac{1}{1+\exp(z)}$
+ \textbf{Bayes optimal discriminant for} $\mathbf{\mathcal{L}}$
+ $\langle\mathbf{x}_i,\mathbf{y}_j\rangle=\log\frac{p(w_i,w_j)}{p_n(w_i,w_j)}{+}\log\frac{\kappa}{1-\kappa},\kappa{=}\frac{1}{k+1}$\\
+ \textbf{ pointwise mutual information}\\
+ for $k{=}1$ and $p_n(w_i,w_j){=}p(w_i)p(w_j)$ $\langle\mathbf{x}_i,\mathbf{y}_j\rangle{\approx}\text{PMI}(w_i,w_j)$
+ 
+ \subsection*{GloVe}
+co-occurence matrix $\mathbf{N}{=}\{n_{ij}\}{\in}\mathbb{R}^{|\mathcal{V}||\mathcal{C}|}$\\
+ $n_{ij}{=}\text{\# occ. of }w_i{\in}\mathcal{V}\text{ in ctxt of }w_j{\in}\mathcal{C}$\\
+ $\mathbf{N}$ is sparse \& computed in one pass.
+ \textbf{Objective} least square $\mathcal{H}(\theta, \mathbf{N})=$\\
+ $\sum_{i,j}f(n_{ij})(\log n_{ij}{-}\log \tilde{p_\theta}(w_i|w_j))^2$
+ \textbf{unnormalised} distribution (model):\\
+ $\tilde{p_\theta}(w_i|w_j){=}\exp[\langle\mathbf{x}_i,\mathbf{y}_j\rangle{+}b_i{+}c_j])$,\\
+$n_{ij}$ is the target and $f$ weight func\\
+$f(n){=}\min\{1, (\frac{n}{n_{\max}})^\alpha\}, \alpha{\in}[0,1]$, \\
+limits the influence of large and small noisy counts\\
+\textbf{Solves} $\min_{\mathbf{X}\mathbf{Y}}\|\mathbf{N}{-}\mathbf{X}^\top\mathbf{Y}\|_F^2$if $f{=}1$
+\mathbf{But} non-convex, hard to find optimum, full gradient descent too expensice to compute.$\Rightarrow$ use SGD

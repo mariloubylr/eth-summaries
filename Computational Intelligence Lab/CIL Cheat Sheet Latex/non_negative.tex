@@ -1,0 +1,36 @@
+\section*{Topic Model}
+find low-dim representation of document from a corpus
+\textbf{Preprocessing} vocabulary extraction/tokenisation, filtering (of too frequent or rare words), normalisation (steming) e.g. argue(d) reduce to arg
+\textbf{bag of words} counts of cooc. ignores order. sparse!
+
+\subsection*{pLSA}
+ $p(w\d)=\sum_{=1}^Kp(w|z)p(z|d)$, for word $w$ in doc $d$ and given topics $z\in\{1\dotsi K\}$\\
+\textbf{assumption} $p(w|d,z){=}p(w|z)$\\
+\textbf{Log-Likel.}
+ $x_{ij}{:=}\{\text{\# of }w_j\text{ in }d_i\}$, $\mathbf{X}{=}{x_{ij}}$\\
+$\ell(\mathbf{U},\mathbf{V}){=}\sum_{ij}x_{ij}\log p(w_j|d_i)=$\\
+$\sum_{(i,j)\in\mathcal{X}}x_{ij}\log\sum_{z=1}^Kp(w_j|z)p(z|d_i)=$\\
+$\sum_{(i,j)\in\mathcal{X}}x_{ij}\log\sum_{z=1}^Kv_{jz}u_{zi}$, with $u_{iz}{\geq}0\sum_zu_{iz}{=}1$ and $v_{jz}{\geq}0\sum_jv_{jz}{=}1$\\
+\textbf{Lower Bound} w. Jensen's inequ.\\
+$q_{zij}$=$P(w_j\text{ in }d_i\text{ is from }z), \sum_{z}q_{ijz}=1$
+
+$\sum_{ij}x_{ij}\log\sum_{z=1}^Kq_{ijz}\frac{u_{zi}v_{zj}}{q_{ijz}}{\geq} g(\mathbf{X}|\mathbf{U},\mathbf{V}){=}$\\
+$\sum_{ij}x_{ij}\sum_{z=1}^K q_{ijz}[\log u_{zi}{+}\log v_{zj}{-}\log q_{zij}]$\\
+\textbf{Lagrangian}
+$\mathcal{L}_{\mathbf{U},\mathbf{V}}(\alpha,\beta)=-g(\mathbf{X}|\mathbf{U},\mathbf{V})+\sum_{j}\alpha_j(\sum_zu_{zi}{-}1){+}\sum_{z}\alpha_i(\sum_jv_{jz}{-}1)$
+\textbf{Optimal solution (EM)}\\
+E: $q_{zij}{=}\frac{u_{zi}v_{zj}}{\sum_{k=1}^Ku_{zi}v_{zj}}{=}\frac{p(w_j|z)p(z|d_i)}{\sum_{k=1}^K p(w_j|k)p(k|d_i)}$\\
+M: $u_{zi}{=}\frac{\sum_jx_{ij}q_{zij}}{\sum_jx_{ij}}$, $v_{zj}{=}\frac{\sum_jx_{ij}q_{zij}}{\sum_{i,l}x_{il}q_{zil}}$\\
+conv. guaranteed but not global opt.
+fixed docs and words. Add a topic?
+
+\subsection*{Latent Dirichlet Allocation}
+$p(\mathbf{u}_i|\alpha){\propto}\prod_{z=1}^Ku_{zi}^{\alpha_z-1}$ generate topic weights. for doc. w. length $l=\sum_j x_j$\\
+$p(\mathbf{x},|\mathbf{V},\mathbf{u}){=}\frac{l!}{\prod_j x_j!}\prod_j (\sum_z v_{zj}u_z)^{x_j}$\\
+$p(\mathbf{x}|\mathbf{V},\alpha){=}\int p(\mathbf{x}|\mathbf{V},\mathbf{u})p(\mathbf{u}|\alpha)d\mathbf{u}$
+
+\section*{Non-Negative Matrix Factorization}
+factorize count matrix $\mathbf{}\in\mathbb{Z}_{\geq 0}^{N\times M}$\\
+$\mathbf{X}=\mathbf{U}^\top\mathbf{V}$. $\mathbf{U},\mathbf{V}$ non-neg. entries and $L_1$ column normalized.\\
+Useful to model non-negative data like images (ink) and leads to part-based representation.
+pLSA is a kind of NMF.

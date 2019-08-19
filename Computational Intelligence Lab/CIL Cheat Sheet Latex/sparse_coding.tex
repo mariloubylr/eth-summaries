@@ -1,0 +1,54 @@
+\section*{Sparse Coding}
+
+\subsection*{Basis Transformation}
+signals often allow sparse representation. Vanishing coeffs due to regularity. 
+\textbf{Find orthonormal dictionary} $\mathcal{U}{=}\{\mathbf{u}_1,\dotsi,\mathbf{u}_L\}$ and change of basis.\\
+$\mathbf{x}=\mathbf{U}\mathbf{z}\rightarrow\mathbf{z}=\mathbf{U}^T\mathbf{x}\rightarrow\mathbf{\hat{x}}=\mathbf{U}\mathbf{\hat{z}}$\\
+$\hat{\mathbf{x}}{=}\sum_{d{\in}\sigma}\hat{z}_d(\mathbf{x})\mathbf{u_d}$, $\hat{z}_d(\mathbf{x})=\langle\mathbf_x,\mathbf{u_d}\rangle$\\
+Error $||\mathbf{x}{-}\hat{\mathbf{x}}||^2{=}\sum_{d\notin\sigma}\langle\mathbf{x},\mathbf{u_d}\rangle^2$
+e.g. fourrier transform denoises well but not for localised signals $\mathbf{O}(D\log D)$
+
+\subsection*{Haar Wavelets}
+$\psi_{n,k}(t){=}2^{n/2}\psi(2^nt-k), 0\leq k\leq2^n$\\
+good for localized signal but poor for denoising smooth signal $\mathbf{O}(D\log D)$
+
+\subsection*{Overcomplete Dictionaries}
+dictionaries generalisation\\
+\textbf{overcompleteness}\\
+$\mathbf{U}{=}[\mathbf{u_1}\dotsi\mathbf{u_L}], \mathbf{U}\in\mathbb{R}^{D\times L}, L>D$\\
+$\mathbf{z}\in\mathbb{R}^L$ contains coeffs. of signal $\mathbf{x}\in\mathbb{R}^D$ in base $\mathbf{U}$. $\mathbf{z}$ is not unique.\\ Search $\mathbf{z}^*{=}\argmin_{\mathbf{z}\in\mathbb{R}^l}||\mathbf{z}||_0$ s.t. $\mathbf{U}\mathbf{z}{=}\mathbf{x}$\\
+Problem is NP-hard/Ill-posed.\\
+\textbf{Coherence}\\
+$L/D \uparrow \Rightarrow \text{sparsity}\uparrow, \mathbf{u_i}\text{ dependency} \uparrow$\\
+$m(\mathbf{U})=\max_{i,j:i\neq j}|\mathbf{u_i}^T\mathbf{u_j}|$ coherence
+$m(\mathbf{B})=0$ for orhtog. $\mathbf{B}$\\
+$m([\mathbf{Bu}]\geq\frac{1}{\sqrt{D}}$ if $\mathbf{u}$ added to $\mathbf{B}$\\
+\textbf{Matching Pursuit} greedy algorithm\\
+at each step chose dimension with max projection onto residual.\\
+Init $\mathbf{r}_0=\mathbf{x}$, $\hat{\mathbf{x}}_0=\mathbf{0}$. Then repeat:\\
+find $j^*=\argmax_j|\langle\mathbf{r}_i, \mathbf{u}_j\rangle|$\\
+$\hat{\mathbf{x}}_{i+1}\leftarrow\hat{\mathbf{x}}_i+\langle\mathbf{r}_i,\mathbf{u}_{j^*}\rangle\mathbf{u}_{j^*}$\\
+$\mathbf{r}_{i+1}\leftarrow\mathbf{r}_i-\langle\mathbf{r}_i,\mathbf{u}_{j^*}\rangle\mathbf{u}_{j^*}$\\
+\textbf{Convergence} greedily reduces residual energy at each step.\\
+$\|\mathbf{r}_i\|_2^2=\|\mathbf{r}_{i+1}\|_2^2+|\langle\mathbf{r}_i,\mathbf{u}_{j^*}\rangle|^2$ (by energy conservation and linearity)
+
+\textbf{Convex Optimization} with $l_1$-norm
+$\mathbf{z}^*{=}\argmin_{\mathbf{z}\in\mathbb{R}^l}||\mathbf{z}||_1$ s.t. $\mathbf{U}\mathbf{z}{=}\mathbf{x}$\\
+can approximate $l_0$ even same results
+\section*{Dictionary Learning}
+learn one dictionary for $\mathbf{x}_1\dotsi\mathbf{x}_N$
+obj. $(\mathbf{U}^*,\mathbf{Z}^*)\in\argmin_{\mathbf{U}\mathbf{Z}}\|\mathbf{x}-\mathbf{U}\mathbf{Z}\|_F^2$
+not jointly convex in $(\mathbf{U},\mathbf{Z})$\\
+\textbf{Greedy Convex Minimization}\\
+\textbf{1.Coding} $\mathbf{Z}^{t+1}\in\argmin_{\mathbf{Z}}\|\mathbf{X}-\mathbf{U}^t\mathbf{Z}\|_F^2$\\
+where $\mathbf{Z}$ sparse and $\mathbf{U}$ fixed\\
+column separable, $\forall n=1\dotsi N$\\
+$\mathbf{z}_n^{t+1}{\in}\text{armin}_{\mathbf{z}}\|\mathbf{z}\|_0\text{st} \|\mathbf{x}_n{-}\mathbf{U}^t\mathbf{z}\|^2{\leq}\sigma\|\mathbf{x}_n\|_2$
+\textbf{2.Update} $\mathbf{U}^{t+1}{\in}\argmin_{\mathbf{U}}\|\mathbf{X}{-}\mathbf{U}\mathbf{Z}^{t+1}\|_F^2$\\
+where $\|\mathbf{u}_l\|_2=1, \forall l$ and $\mathbf{Z}$ fixed.\\
+not separable $\mathbf{R}^t_l$ residual of atom $\mathbf{u}_\ell$ \\
+$\|\mathbf{X}{-}[\mathbf{u}_1^t\dotsi\mathbf{u}_\ell\dotsi\mathbf{u}_L^t]\mathbf{Z}^{t+1}\|_F^2=$\\
+$\|\mathbf{X}{-}(\sum_{e\neq\ell}\mathbf{u}_e^t(\mathbf{z}_e^{t+1})^T+\mathbf{u}_\ell\mathbf{z}_\ell^{t+1}^T)\|_F^2=\|\mathbf{R}_\ell^t-\mathbf{u}\ell(\mathbf{z}_\ell^{t+1}^T)\|$ approx. by SVD.
+$\mathbf{R}_\ell^t=\tilde{\mathbf{U}}\mathbf{\Sigma}\mathbf{\tilde{V}}^T$, $\mathbf{u}_\ell^*=\mathbf{\tilde{u}}_1$ first. sing vec.
+
+
